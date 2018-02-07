@@ -1,5 +1,3 @@
-# matsim-example-project
+# MATSim-Davis projects
 
-A small example of how to use MATSim as a library.
-
-By default, this project uses the last stable version. In order to get the development snapshot, edit `pom.xml`.
+Code repository for UC Davis / ITS MATSim code
