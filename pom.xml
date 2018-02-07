@@ -10,19 +10,43 @@
 	<description>MATSim example project</description>
 
 	<repositories>
-		<!-- Repository for MATSim releases (MATSim is not on Maven central) -->
+	 		<repository>
+			<!-- Geotools is not on Maven central -->
+			<id>osgeo</id>
+			<name>Geotools repository</name>
+			<url>http://download.osgeo.org/webdav/geotools</url>
+		</repository>
 		<repository>
+			<!-- MATSim is not on Maven central -->
 			<id>matsim</id>
 			<url>https://dl.bintray.com/matsim/matsim</url>
 		</repository>
-	</repositories>
+ 		<repository>
+			<id>ojo-snapshots</id>
+			<url>http://oss.jfrog.org/libs-snapshot</url>
+		</repository>	
+	</repositories>	
 
 	<dependencies>
-		<!-- This is the matsim "core": -->
 		<dependency>
 			<groupId>org.matsim</groupId>
 			<artifactId>matsim</artifactId>
-			<version>0.9.0</version>
+<!-- 			<version>0.9.0</version>
+ -->			<version>0.10.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Include some MATSim extensions -->
+		<dependency>
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>minibus</artifactId>
+<!-- 			<version>0.9.0</version>
+ -->			<version>0.10.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.matsim.contrib</groupId>
+			<artifactId>otfvis</artifactId>
+<!-- 			<version>0.9.0</version>
+ -->			<version>0.10.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Include the JUnit testing library -->
@@ -31,6 +55,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.matsim</groupId>
+			<artifactId>matsim-tutorial</artifactId>
+			<version>0.10.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -41,8 +70,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<showWarnings>false</showWarnings>
 					<showDeprecation>false</showDeprecation>
 					<encoding>UTF-8</encoding>
@@ -57,12 +86,12 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>true</downloadJavadocs>
-				</configuration>
+			  <groupId>org.apache.maven.plugins</groupId>
+			  <artifactId>maven-eclipse-plugin</artifactId>
+			  <configuration>
+			    <downloadSources>true</downloadSources>
+			    <downloadJavadocs>true</downloadJavadocs>
+			  </configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
