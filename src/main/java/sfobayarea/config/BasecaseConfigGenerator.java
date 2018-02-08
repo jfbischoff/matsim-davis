@@ -44,7 +44,7 @@ import org.matsim.core.replanning.strategies.DefaultPlanStrategiesModule.Default
 public class BasecaseConfigGenerator {
 	public static void main(String[] args) {
 		String basefolder = "C:\\Users\\Joschka\\Desktop\\davis\\scenario/";
-		new BasecaseConfigGenerator().run(basefolder,0.01,0.05);
+		new BasecaseConfigGenerator().run(basefolder,0.1,0.3);
 	}
 	
 	public void run(String basefolder, double flowCap, double storageCap){		
@@ -76,7 +76,7 @@ public class BasecaseConfigGenerator {
 		config.parallelEventHandling().setNumberOfThreads(6);
 		
 		
-		config.plans().setInputFile("plans_0.01.xml.gz");
+		config.plans().setInputFile("plans_0.1.xml.gz");
 		
 		ActivityParams escort = new ActivityParams("escort");
 		escort.setTypicalDuration(900);

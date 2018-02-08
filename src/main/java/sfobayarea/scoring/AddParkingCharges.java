@@ -41,6 +41,7 @@ public class AddParkingCharges implements PersonArrivalEventHandler, PersonDepar
 	private Map<Id<Person>,Double> lastCarArrival = new HashMap<>();
 	@Inject
 	public AddParkingCharges(Network network, EventsManager events) {
+		events.addHandler(this);
 		this.network=network;
 		this.events = events;
 	}

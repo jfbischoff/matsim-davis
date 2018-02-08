@@ -49,9 +49,9 @@ public class ConvertAndEnrichPlansFile {
 	public static void main(String[] args) {
 	
 		String inputPlansFile = "C:/Users/Joschka/Desktop/davis/scenario/plans_all.xml.gz";
-		String outputPlansFile = "C:/Users/Joschka/Desktop/davis/scenario/plans_0.01.xml.gz";
 		String inputCsvFile = "C:/Users/Joschka/Desktop/davis/Original Data/personData_7.csv";
-		double sampleSize = 0.01;
+		double sampleSize = 0.1;
+		String outputPlansFile = "C:/Users/Joschka/Desktop/davis/scenario/plans_"+sampleSize+".xml.gz";
 		new ConvertAndEnrichPlansFile().run(inputPlansFile, outputPlansFile, inputCsvFile, sampleSize);
 }
 	public void run(String inputPlansFile, String outputPlansFile, String inputCSVFile, double sampleSize) {

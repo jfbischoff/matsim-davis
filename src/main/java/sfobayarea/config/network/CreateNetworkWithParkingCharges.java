@@ -29,7 +29,9 @@ import org.matsim.api.core.v01.network.NetworkWriter;
 import org.matsim.core.config.ConfigUtils;
 import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.scenario.ScenarioUtils;
+import org.matsim.core.utils.geometry.CoordinateTransformation;
 import org.matsim.core.utils.geometry.geotools.MGC;
+import org.matsim.core.utils.geometry.transformations.TransformationFactory;
 import org.matsim.core.utils.gis.ShapeFileReader;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileHandler;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileParser;
@@ -43,9 +45,10 @@ public class CreateNetworkWithParkingCharges {
 	
 	private Collection<SimpleFeature> features;
 	private Map<String,Double> tazParkCost = new HashMap<>();
+	CoordinateTransformation ct = TransformationFactory.getCoordinateTransformation("EPSG:32610", TransformationFactory.WGS84);
 public static void main(String[] args) {
 	String networkFile = "C:/Users/Joschka/Desktop/davis/scenario/network_cleaned.xml";
-	String tazFile = "C:/Users/Joschka/Desktop/davis/taz/bayarea_taz2000.shp";
+	String tazFile = "C:/Users/Joschka/Desktop/davis/taz/Communities_of_Concern_TAZ.shp";
 	String outputNetworkFile = "C:/Users/Joschka/Desktop/davis/scenario/network_parkingCost.xml.gz";
 	String parkingChargeFile = "C:/Users/Joschka/Desktop/davis/Original Data/tazData.csv";
 	new CreateNetworkWithParkingCharges().run(networkFile, tazFile, outputNetworkFile, parkingChargeFile);
@@ -84,12 +87,12 @@ public void run (String networkFile , String tazFile, String outputNetworkFile ,
 }
 
 private void setLinkTAZAndParkCost(Link l) {
-	Point p = MGC.coord2Point(l.getCoord());
+	Point p = MGC.coord2Point(ct.transform(l.getCoord()));
 	String taz = "unknown";
 	for (SimpleFeature f : this.features) {
 		Geometry g = (Geometry) f.getDefaultGeometry();
 		if (g.contains(p)) {
-			taz = (String) f.getAttribute("TAZ");
+			taz = Long.toString((long) f.getAttribute("taz_key"));
 			break;
 		}
 	}
