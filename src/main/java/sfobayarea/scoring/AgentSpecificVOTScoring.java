@@ -53,6 +53,7 @@ public class AgentSpecificVOTScoring implements ScoringFunctionFactory {
 		Double vot = (Double) person.getAttributes().getAttribute("vot");
 		if (vot!=null) {
 		builder.setMarginalUtilityOfPerforming_s(vot/3600.);
+		}else {
 		Logger.getLogger(getClass()).warn("No custom VOT value found for person "+person.getId().toString()+". Assuming default value.");
 		}
 		ScoringParameters params = builder.build();

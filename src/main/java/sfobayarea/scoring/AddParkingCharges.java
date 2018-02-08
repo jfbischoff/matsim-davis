@@ -57,8 +57,10 @@ public class AddParkingCharges implements PersonArrivalEventHandler, PersonDepar
 			double parkTime = (event.getTime()-arrivalTime)/3600;
 			Double cost = (double) network.getLinks().get(event.getLinkId()).getAttributes().getAttribute("parkCost") / 100.;
 			double charge = cost*parkTime;
+			if (charge>0) {	
 			events.processEvent(new PersonMoneyEvent(event.getTime(), event.getPersonId(),-charge));
-		}
+			}
+			}
 	}
 
 	@Override
