@@ -32,7 +32,10 @@ import org.matsim.core.population.io.StreamingPopulationReader;
 import org.matsim.core.scenario.ScenarioUtils;
 
 public class ExtractActTypesLegModes {
-
+/**\
+ * Reads a plan file and prints all activity types and modes occuring in it.
+ * @param args
+ */
 	public static void main(String[] args) {
 		final Set<String> activityTypes = new HashSet<>();
 		final Set<String> modes = new HashSet<>();

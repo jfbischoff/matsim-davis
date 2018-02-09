@@ -46,6 +46,13 @@ public class CreateNetworkWithParkingCharges {
 	private Collection<SimpleFeature> features;
 	private Map<String,Double> tazParkCost = new HashMap<>();
 	CoordinateTransformation ct = TransformationFactory.getCoordinateTransformation("EPSG:32610", TransformationFactory.WGS84);
+	
+	
+	/**
+	 * Reads in a network file, a csv file with parking charge per TAZ and a shape file with all TAZs.
+	 * Then, all network links are matched to a TAZ and parking charges are assigned (if applicable).
+	 * 
+	 */
 public static void main(String[] args) {
 	String networkFile = "C:/Users/Joschka/Desktop/davis/scenario/network_cleaned.xml";
 	String tazFile = "C:/Users/Joschka/Desktop/davis/taz/Communities_of_Concern_TAZ.shp";

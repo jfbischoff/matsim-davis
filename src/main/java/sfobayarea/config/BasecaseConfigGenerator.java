@@ -39,7 +39,7 @@ import org.matsim.core.replanning.strategies.DefaultPlanStrategiesModule.Default
  *
  */
 /**
- *
+ * Generates a config file using all the activity and mode types available.
  */
 public class BasecaseConfigGenerator {
 	public static void main(String[] args) {

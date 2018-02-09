@@ -40,18 +40,26 @@ import sfobayarea.scoring.AgentSpecificVOTScoring;
 
 public class RunBasecase {
 public static void main(String[] args) {
+	//read in the config file:
+	Config config = ConfigUtils.loadConfig("C:/Users/anmol331\\Desktop\\scenario/config_0.1.xml");
 	
-	Config config = ConfigUtils.loadConfig("C:/Users/Joschka/Desktop/davis/scenario/config_0.01.xml");
+	//from the config, read in all other files (such as network, population...). this is called a "scenario"
 	Scenario scenario = ScenarioUtils.loadScenario(config);
 	
+	//based on the scenario, initiate a controler, which later runs the simulation
 	Controler controler = new Controler(scenario);
 
-	// tell the system to use the congested car router for the ride mode:
+	// add some custom extensions to the Controler
 	controler.addOverridingModule(new AbstractModule(){
 		@Override public void install() {
+			//adding a person specific VOT for the utility function
 			bindScoringFunctionFactory().to(AgentSpecificVOTScoring.class);
+			
+			//adding travel times for ride mode based on actual congestion
 			addTravelTimeBinding(TransportMode.ride).to(networkTravelTime());
-			addTravelDisutilityFactoryBinding(TransportMode.ride).to(carTravelDisutilityFactoryKey());		
+			addTravelDisutilityFactoryBinding(TransportMode.ride).to(carTravelDisutilityFactoryKey());
+			
+			//adding an event handler that takes care of calculating parking charges
 			bind(AddParkingCharges.class).asEagerSingleton();
 	}});
 		

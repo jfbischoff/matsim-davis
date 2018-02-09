@@ -40,12 +40,12 @@ import org.matsim.core.utils.io.tabularFileParser.TabularFileParserConfig;
 
 public class ConvertAndEnrichPlansFile {
 	
+	Map<Id<Person>,Double> vots = new HashMap<>();
 	/**
 	 * Reads a plan file, samples it down to a percentage and adds the vot parameter from a csv file. 
 	 * Also replaces taxi mode by car mode. 
 	 * 
 	 */
-	Map<Id<Person>,Double> vots = new HashMap<>();
 	public static void main(String[] args) {
 	
 		String inputPlansFile = "C:/Users/Joschka/Desktop/davis/scenario/plans_all.xml.gz";
