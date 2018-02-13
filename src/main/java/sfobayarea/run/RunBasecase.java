@@ -40,8 +40,14 @@ import sfobayarea.scoring.AgentSpecificVOTScoring;
 
 public class RunBasecase {
 public static void main(String[] args) {
+	String configFile;
+	if (args.length>0) {
+		configFile = args[0];
+	} else {
+		configFile = "C:/Users/anmol331\\Desktop\\scenario/config_0.1_relax.xml";
+	}
 	//read in the config file:
-	Config config = ConfigUtils.loadConfig("C:/Users/anmol331\\Desktop\\scenario/config_0.1_relax.xml");
+	Config config = ConfigUtils.loadConfig(configFile);
 	config.controler().setWritePlansUntilIteration(0);
 	//from the config, read in all other files (such as network, population...). this is called a "scenario"
 	Scenario scenario = ScenarioUtils.loadScenario(config);
