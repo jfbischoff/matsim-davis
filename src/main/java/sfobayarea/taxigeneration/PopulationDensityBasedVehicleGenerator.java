@@ -24,6 +24,8 @@ import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.population.io.PopulationReader;
 import org.matsim.core.scenario.ScenarioUtils;
 
+import utils.DavisMatsimUtils;
+
 public class PopulationDensityBasedVehicleGenerator {
 
 	private Network network;
@@ -43,16 +45,9 @@ public class PopulationDensityBasedVehicleGenerator {
 		
 		network = NetworkUtils.createNetwork();
 		new MatsimNetworkReader(network).readFile(networkFile);
-		for (Link l : network.getLinks().values()) {
-			String taz = (String) l.getAttributes().getAttribute("taz");
-			if (linksPerTAZ.containsKey(taz)) {
-				linksPerTAZ.get(taz).add(l);
-			} else {
-				List<Link> links = new ArrayList<>();
-				links.add(l);
-				linksPerTAZ.put(taz, links);
-				}
-		}
+		
+		
+		linksPerTAZ = DavisMatsimUtils.getLinksPerTAZ(network);
 		
 		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
 		new PopulationReader(scenario).readFile(inputPlansFile);

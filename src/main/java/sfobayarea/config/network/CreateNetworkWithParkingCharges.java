@@ -27,6 +27,8 @@ import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.network.NetworkWriter;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.network.algorithms.NetworkCleaner;
+import org.matsim.core.network.algorithms.NetworkSimplifier;
 import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.scenario.ScenarioUtils;
 import org.matsim.core.utils.geometry.CoordinateTransformation;
@@ -54,10 +56,10 @@ public class CreateNetworkWithParkingCharges {
 	 * 
 	 */
 public static void main(String[] args) {
-	String networkFile = "C:/Users/Joschka/Desktop/davis/scenario/network_cleaned.xml";
-	String tazFile = "C:/Users/Joschka/Desktop/davis/taz/Communities_of_Concern_TAZ.shp";
-	String outputNetworkFile = "C:/Users/Joschka/Desktop/davis/scenario/network_parkingCost.xml.gz";
-	String parkingChargeFile = "C:/Users/Joschka/Desktop/davis/Original Data/tazData.csv";
+	String networkFile = "C:/Users/anmol331/Desktop/scenario/new_network/osm_network.xml";
+	String tazFile = "C:/Users/anmol331/Desktop/scenario/taz/Communities_of_Concern_TAZ.shp";
+	String outputNetworkFile = "C:/Users/anmol331/Desktop/scenario/new_network/network_parkingCost.xml.gz";
+	String parkingChargeFile = "C:/Users/anmol331/Desktop/scenario/tazData.csv";
 	new CreateNetworkWithParkingCharges().run(networkFile, tazFile, outputNetworkFile, parkingChargeFile);
 }
 
@@ -69,7 +71,8 @@ public void run (String networkFile , String tazFile, String outputNetworkFile ,
 
 		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
 		new MatsimNetworkReader(scenario.getNetwork()).readFile(networkFile);
-		
+		new NetworkSimplifier().run(scenario.getNetwork());
+		new NetworkCleaner().run(scenario.getNetwork());
 		TabularFileParserConfig tfc = new TabularFileParserConfig();
 		tfc.setDelimiterTags(new String[] {","});
 		tfc.setFileName(parkingChargeFile);
