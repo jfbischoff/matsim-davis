@@ -1,4 +1,4 @@
-package sfobayarea.taxigeneration;
+package bartaccess.vehicles;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,9 +34,9 @@ public class PopulationDensityBasedVehicleGenerator {
 	
 	public static void main(String[] args) {
 		String networkFile = "C:\\Users\\anmol331\\Desktop\\scenario\\network_parkingCost.xml.gz";
-		String inputPlansFile = "C:\\Users\\anmol331\\Desktop\\scenario\\plans_0.1.xml.gz";
-		int fleetsize = 30000;
-		String outputVehiclesFile = "C:\\Users\\anmol331\\Desktop\\scenario\\vehicles_"+fleetsize+".xml.gz";
+		String inputPlansFile = "C:\\Users\\anmol331\\Desktop\\Scenario_3\\drt_plans.xml";
+		int fleetsize = 5000;
+		String outputVehiclesFile = "C:\\Users\\anmol331\\Desktop\\Scenario_3\\\\drtvehicles_"+fleetsize+".xml.gz";
 		
 		new PopulationDensityBasedVehicleGenerator().run(networkFile, inputPlansFile, outputVehiclesFile, fleetsize);
 	}
@@ -69,7 +69,7 @@ public class PopulationDensityBasedVehicleGenerator {
 			String taz = wrs.select();
 			Collections.shuffle(linksPerTAZ.get(taz));
 			Link startLink = linksPerTAZ.get(taz).get(0);
-			Vehicle v = new VehicleImpl(Id.create("taxi_"+i,Vehicle.class), startLink, 1, 0, 30*3600); 
+			Vehicle v = new VehicleImpl(Id.create("taxi_"+i,Vehicle.class), startLink, 8, 0, 30*3600); 
 			vehicles.add(v);
 		}
 		new VehicleWriter(vehicles).write(outputVehiclesFile);

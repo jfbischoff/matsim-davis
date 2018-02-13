@@ -73,6 +73,11 @@ public void run (String networkFile , String tazFile, String outputNetworkFile ,
 		new MatsimNetworkReader(scenario.getNetwork()).readFile(networkFile);
 		new NetworkSimplifier().run(scenario.getNetwork());
 		new NetworkCleaner().run(scenario.getNetwork());
+		for (Link l : scenario.getNetwork().getLinks().values()) {
+			if ((l.getLength()<100)&&(l.getCapacity()<3000)) {
+				l.setCapacity(3000);
+			}
+		}
 		TabularFileParserConfig tfc = new TabularFileParserConfig();
 		tfc.setDelimiterTags(new String[] {","});
 		tfc.setFileName(parkingChargeFile);
