@@ -18,18 +18,24 @@
   
 package sfobayarea.plan;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.matsim.api.core.v01.Coord;
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
+import org.matsim.api.core.v01.network.Link;
 import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.api.core.v01.population.PlanElement;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.network.NetworkUtils;
+import org.matsim.core.network.io.MatsimNetworkReader;
 import org.matsim.core.population.algorithms.PersonAlgorithm;
 import org.matsim.core.population.io.StreamingPopulationReader;
 import org.matsim.core.population.io.StreamingPopulationWriter;
@@ -38,9 +44,13 @@ import org.matsim.core.utils.io.tabularFileParser.TabularFileHandler;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileParser;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileParserConfig;
 
+import utils.DavisMatsimUtils;
+
 public class ConvertAndEnrichPlansFile {
 	
 	Map<Id<Person>,Double> vots = new HashMap<>();
+	Map<String,List<Link>> linksPerTaz;
+	Scenario scenario;
 	/**
 	 * Reads a plan file, samples it down to a percentage and adds the vot parameter from a csv file. 
 	 * Also replaces taxi mode by car mode. 
@@ -48,15 +58,18 @@ public class ConvertAndEnrichPlansFile {
 	 */
 	public static void main(String[] args) {
 	
-		String inputPlansFile = "C:/Users/Joschka/Desktop/davis/scenario/plans_all.xml.gz";
-		String inputCsvFile = "C:/Users/Joschka/Desktop/davis/Original Data/personData_7.csv";
-		double sampleSize = 0.1;
-		String outputPlansFile = "C:/Users/Joschka/Desktop/davis/scenario/plans_"+sampleSize+".xml.gz";
-		new ConvertAndEnrichPlansFile().run(inputPlansFile, outputPlansFile, inputCsvFile, sampleSize);
+		String inputPlansFile = "C:/Users/anmol331/Desktop/scenario/plans_all_7.xml.gz";
+		String inputCsvFile = "C:/Users/anmol331/Desktop/scenario/personData_7.csv";
+		String inputNetworkFile = "C:/Users/anmol331/Desktop/scenario/network_parkingCost.xml.gz";
+		double sampleSize = 0.05;
+		String outputPlansFile = "C:/Users/anmol331/Desktop/scenario/plans_"+sampleSize+".xml.gz";
+		new ConvertAndEnrichPlansFile().run(inputPlansFile, outputPlansFile, inputCsvFile, inputNetworkFile, sampleSize);
 }
-	public void run(String inputPlansFile, String outputPlansFile, String inputCSVFile, double sampleSize) {
+	public void run(String inputPlansFile, String outputPlansFile, String inputCSVFile, String inputNetworkFile, double sampleSize) {
 		readVOTs(inputCSVFile);
-		Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
+		new MatsimNetworkReader(scenario.getNetwork()).readFile(inputNetworkFile);
+		linksPerTaz = DavisMatsimUtils.getLinksPerTAZ(scenario.getNetwork());
 		StreamingPopulationReader spr = new StreamingPopulationReader(scenario);
 		StreamingPopulationWriter spw = new StreamingPopulationWriter(sampleSize);
 		spw.writeStartPlans(outputPlansFile);
@@ -80,6 +93,8 @@ public class ConvertAndEnrichPlansFile {
 					}
 					else {
 						Activity act = (Activity) pe;
+						//TODO: shuffle coords
+						act.setCoord(shuffleCoordsinTAZ(act.getCoord()));
 						if (lastActivityEndTime!=null) {
 							if (act.getEndTime()<lastActivityEndTime+1800) {
 								act.setEndTime(lastActivityEndTime+1800);
@@ -90,6 +105,8 @@ public class ConvertAndEnrichPlansFile {
 					}
 				}
 			}
+
+			
 		});
 		spr.addAlgorithm(spw);
 		spr.readFile(inputPlansFile);
@@ -112,5 +129,21 @@ public class ConvertAndEnrichPlansFile {
 			}
 			}
 		});
+	}
+	private Coord shuffleCoordsinTAZ(Coord coord) {
+		String taz = (String) NetworkUtils.getNearestLink(scenario.getNetwork(), coord).getAttributes().getAttribute("taz");
+		Coord c = getRandomCoordInTaz(taz);
+		if (c!=null) {
+			return c;
+		}
+		else return coord;
+	}
+	
+	private Coord getRandomCoordInTaz(String taz) {
+		if (linksPerTaz.containsKey(taz)) {
+		Collections.shuffle(linksPerTaz.get(taz));
+		Link startLink = linksPerTaz.get(taz).get(0);
+		return startLink.getCoord();}
+		else return null;
 	}
 }

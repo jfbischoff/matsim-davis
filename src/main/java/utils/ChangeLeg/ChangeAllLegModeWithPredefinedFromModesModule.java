@@ -54,7 +54,7 @@ public class ChangeAllLegModeWithPredefinedFromModesModule extends AbstractModul
 	@Override
 	public void install() {
 		{
-			addPlanStrategyBinding(DefaultPlanStrategiesModule.DefaultStrategy.ChangeSingleTripMode.toString())
+			addPlanStrategyBinding(DefaultPlanStrategiesModule.DefaultStrategy.ChangeTripMode.toString())
 					.toProvider(new Provider<PlanStrategy>() {
 						@Inject
 						Provider<TripRouter> tripRouterProvider;
