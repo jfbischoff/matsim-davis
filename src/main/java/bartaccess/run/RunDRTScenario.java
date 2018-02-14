@@ -38,6 +38,12 @@ import org.matsim.vis.otfvis.OTFVisConfigGroup;
  */
 public class RunDRTScenario {
 	
+	public static void main(String[] args) {
+		//add the path to the config file here
+		Config config = ConfigUtils.loadConfig("C:/Users/anmol331/Desktop/Scenario_3/configDRT.xml", new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
+		run(config,false);
+		
+	}
 	
 	public static void run(Config config, boolean otfvis) {
 		config.addConfigConsistencyChecker(new DrtConfigConsistencyChecker());
@@ -63,10 +69,4 @@ public class RunDRTScenario {
 
 	
 
-	public static void main(String[] args) {
-		
-		Config config = ConfigUtils.loadConfig("C:/Users/anmol331/Desktop/Scenario_3/configDRT.xml", new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
-		run(config,false);
-
-	}
 }
