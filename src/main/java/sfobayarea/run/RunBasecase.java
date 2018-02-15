@@ -44,7 +44,7 @@ public static void main(String[] args) {
 	if (args.length>0) {
 		configFile = args[0];
 	} else {
-		configFile = "C:/Users/anmol331\\Desktop\\scenario/config_0.1_relax.xml";
+		configFile = "C:/Users/anmol331\\Desktop\\scenario/config_0.05.xml";
 	}
 	//read in the config file:
 	Config config = ConfigUtils.loadConfig(configFile);

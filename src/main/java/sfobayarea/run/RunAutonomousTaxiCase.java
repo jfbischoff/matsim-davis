@@ -50,7 +50,7 @@ import utils.ChangeLeg.ChangeAllLegModeWithPredefinedFromModesModule;
 public class RunAutonomousTaxiCase {
 public static void main(String[] args) {
 	//read in the config file:
-	Config config = ConfigUtils.loadConfig("C:/Users/anmol331\\Desktop\\scenario/config_0.1_at_casefc06.xml",new DvrpConfigGroup(), new TaxiConfigGroup(),
+	Config config = ConfigUtils.loadConfig("C:/Users/anmol331\\Desktop\\scenario/config_0.05_at_case.xml",new DvrpConfigGroup(), new TaxiConfigGroup(),
 			 new TaxiFareConfigGroup());
 	TaxiConfigGroup.get(config).setChangeStartLinkToLastLinkInSchedule(true);
 	config.addConfigConsistencyChecker(new TaxiConfigConsistencyChecker());

@@ -40,7 +40,7 @@ public class RunDRTScenario {
 	
 	public static void main(String[] args) {
 		//add the path to the config file here
-		Config config = ConfigUtils.loadConfig("C:/Users/anmol331/Desktop/Scenario_3/configDRT.xml", new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
+		Config config = ConfigUtils.loadConfig("C:/Users/anmol331/Desktop/Scenario_3/configDRTWithStops.xml", new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
 		run(config,false);
 		
 	}
