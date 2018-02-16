@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import org.matsim.api.core.v01.Id;
 import org.matsim.api.core.v01.Scenario;
+import org.matsim.api.core.v01.population.Activity;
 import org.matsim.api.core.v01.population.Leg;
 import org.matsim.api.core.v01.population.Person;
 import org.matsim.core.api.experimental.events.EventsManager;
@@ -31,7 +32,7 @@ public class RunAnalysis {
 	private Map<String,Double> vots = new HashMap<>();
 	
 	private static String DEL = ",";
-	private static String HEADER = "personId"+DEL+"personId_TMC"+DEL+"VOT"+DEL+"travelDistance_car_m"+DEL+"travelTime_car"+DEL+"travelTime_d2d"+DEL+"waitTime_d2d"+DEL+"travelTime_stop"+DEL+"waitTime_stop";
+	private static String HEADER = "personId"+DEL+"personId_TMC"+DEL+"homeX"+DEL+"homeY"+DEL+"VOT"+DEL+"travelDistance_car_m"+DEL+"travelTime_car"+DEL+"travelTime_d2d_inclWait"+DEL+"waitTime_d2d"+DEL+"travelTime_stop_inclWait"+DEL+"waitTime_stop";
 	
 	public static void main(String[] args) {
 		new RunAnalysis().run();
@@ -74,13 +75,15 @@ public class RunAnalysis {
 		try {
 			bw.write(HEADER);
 			for (List<String> r : resultsString.values()) {
-				if (r.size() == 9) {
+				if (r.size() == 11) {
 					bw.newLine();
 				for (String s : r) {
 					bw.write(s+DEL);
 				}
 				}
 			}
+			bw.flush();
+			bw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -147,6 +150,11 @@ public class RunAnalysis {
 			resultsString.get(p.getId()).add(p.getId().toString());
 			String tmcid = getTMCPersonId(p.getId());
 			resultsString.get(p.getId()).add(tmcid);
+
+			Activity act0 =  (Activity) p.getSelectedPlan().getPlanElements().get(0);
+			resultsString.get(p.getId()).add(String.format("%.5f", act0.getCoord().getX()));
+			resultsString.get(p.getId()).add(String.format("%.5f", act0.getCoord().getY()));
+			
 			Leg carLeg = (Leg) p.getSelectedPlan().getPlanElements().get(1);
 			Double vot = vots.get(tmcid);
 			resultsString.get(p.getId()).add(String.format("%.3f", vot));

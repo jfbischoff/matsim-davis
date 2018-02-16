@@ -39,10 +39,11 @@ import org.matsim.vis.otfvis.OTFVisConfigGroup;
 public class RunDRTScenario {
 	
 	public static void main(String[] args) {
-		//add the path to the config file here
-		Config config = ConfigUtils.loadConfig("C:/Users/anmol331/Desktop/Scenario_3/configDRTWithStops.xml", new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
-		//for the door2door case use a different config file:
-//		Config config = ConfigUtils.loadConfig("C:/Users/anmol331/Desktop/Scenario_3/configDRT.xml", new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
+//		stop based case:
+		String configFile = "C:/Users/anmol331/Desktop/Scenario_3/configDRTWithStops.xml";
+//		for the door2door case use a different config file:
+//		String configFile = "C:/Users/anmol331/Desktop/Scenario_3/configDRT.xml";
+		Config config = ConfigUtils.loadConfig(configFile, new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
 		run(config,false);
 		
 	}
@@ -50,14 +51,11 @@ public class RunDRTScenario {
 	public static void run(Config config, boolean otfvis) {
 		config.addConfigConsistencyChecker(new DrtConfigConsistencyChecker());
 		config.checkConsistency();
-
-		
-		
 		Controler controler = DrtControlerCreator.createControler(config, otfvis);
 		DrtZonalSystem zones = new DrtZonalSystem(controler.getScenario().getNetwork(), 3000);
 		
 		controler.addOverridingModule(new AbstractModule() {
-			
+		// vehicles will be re-located according to a simple demand based algorithm	
 			@Override
 			public void install() {
 				bind(RebalancingStrategy.class).to(DemandBasedRebalancingStrategy.class).asEagerSingleton();

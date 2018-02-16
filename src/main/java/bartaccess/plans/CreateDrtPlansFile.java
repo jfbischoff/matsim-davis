@@ -52,7 +52,10 @@ public class CreateDrtPlansFile {
 		new PopulationWriter(scenario.getPopulation()).write(outputPlansFile);
 
 	}
-
+/*
+ * Read in the Bart station file from CSV:
+ * 
+*/
 	private void readStationFile(String bartLocationFile) {
 		this.stations = new HashMap<>();
 		TabularFileParserConfig tbc = new TabularFileParserConfig();
@@ -75,6 +78,10 @@ public class CreateDrtPlansFile {
 		});
 	}
 
+	/**
+	 * Reads the CSV 
+	 * @param inputTriptable
+	 */
 	private void readCSVToPopulation(String inputTriptable) {
 		TabularFileParserConfig tbc = new TabularFileParserConfig();
 		tbc.setDelimiterTags(new String[] {","});
@@ -127,6 +134,12 @@ public class CreateDrtPlansFile {
 		return startLink.getCoord();}
 		else return null;
 	}
+	
+	/**
+	 * finds the closest Bart station location
+	 * @param homeCoord
+	 * @return Coord of the closest station
+	 */
 	private Coord findClosestStop(Coord homeCoord) {
 		double bestDistance = Double.MAX_VALUE;
 		Coord bestCoord = null;
