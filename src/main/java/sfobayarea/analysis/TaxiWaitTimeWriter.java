@@ -26,12 +26,13 @@ public class TaxiWaitTimeWriter implements PersonDepartureEventHandler, PersonEn
 	private Map<Id<Person>,Id<Link>> departureLink = new HashMap<>(); 
 	private List<String> waits = new ArrayList<>();
 	private final Network network;
-	private static final String DEL = ",";
-	private static final String HEADER = "personId"+DEL+"departureTime"+DEL+"waitTime"+DEL+"linkId"+DEL+"coordX"+DEL+"coordY";
+	private String del =",";
+	private String HEADER = "personId"+del+"departureTime"+del+"waitTime"+del+"linkId"+del+"coordX"+del+"coordY";
 	
 	@Inject
-	public TaxiWaitTimeWriter(Network network) {
+	public TaxiWaitTimeWriter(Network network,String delimiter) {
 		this.network = network;
+		del = delimiter;
 	}
 	
 	
@@ -49,7 +50,7 @@ public class TaxiWaitTimeWriter implements PersonDepartureEventHandler, PersonEn
 			double departureTime = departureTimes.remove(pid);
 			double waitTime = event.getTime() - departureTime;
 			Coord linkCoord =  network.getLinks().get(linkId).getCoord();
-			String s = pid+DEL+departureTime+DEL+waitTime+DEL+linkId+DEL+linkCoord.getX()+DEL+linkCoord.getY();
+			String s = pid+del+departureTime+del+waitTime+del+linkId+del+linkCoord.getX()+del+linkCoord.getY();
 			this.waits.add(s);
 		}
 	}
