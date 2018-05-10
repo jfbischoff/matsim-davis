@@ -40,10 +40,11 @@ public class RunDRTScenario {
 	
 	public static void main(String[] args) {
 //		stop based case:
-		String configFile = "C:/Users/anmol331/Desktop/Scenario_3/configDRTWithStops.xml";
+		String configFile = "C:/Users/Joschka/Desktop/davis/Scenario_3/matsim_input/configDRT1person.xml";
 //		for the door2door case use a different config file:
 //		String configFile = "C:/Users/anmol331/Desktop/Scenario_3/configDRT.xml";
 		Config config = ConfigUtils.loadConfig(configFile, new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
+		DrtConfigGroup.get(config).setPrintDetailedWarnings(false);
 		run(config,false);
 		
 	}

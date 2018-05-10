@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -24,6 +25,7 @@ import org.matsim.core.utils.io.IOUtils;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileHandler;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileParser;
 import org.matsim.core.utils.io.tabularFileParser.TabularFileParserConfig;
+import org.matsim.core.utils.misc.Time;
 
 public class RunAnalysis {
 
@@ -31,8 +33,12 @@ public class RunAnalysis {
 	private Scenario scenario ;
 	private Map<String,Double> vots = new HashMap<>();
 	
-	private static String DEL = ",";
-	private static String HEADER = "personId"+DEL+"personId_TMC"+DEL+"homeX"+DEL+"homeY"+DEL+"VOT"+DEL+"travelDistance_car_m"+DEL+"travelTime_car"+DEL+"travelTime_d2d_inclWait"+DEL+"waitTime_d2d"+DEL+"travelTime_stop_inclWait"+DEL+"waitTime_stop";
+	private static String DEL = ";";
+	private static String HEADER = "personId"+DEL+"personId_TMC"+DEL+"homeX"+DEL+"homeY"+DEL+"VOT"
+			+DEL+"travelDistance_car_m"+DEL+"travelTime_car" +DEL+ "arrivalTime_car"
+			+DEL+"travelTime_d2d_inclWait"+DEL+"waitTime_d2d"+DEL+ "arrivalTime_d2d"
+			+DEL+"travelTime_stop_inclWait"+DEL+"waitTime_stop"+DEL+ "arrivalTime_stop"
+			+DEL+"travelTime_unpooled"+DEL+"waitTime_unpooled"+DEL+ "arrivalTime_unpooled";
 	
 	public static void main(String[] args) {
 		new RunAnalysis().run();
@@ -41,32 +47,53 @@ public class RunAnalysis {
 	}
 
 	private void run() {
+		
+		Locale.setDefault(new Locale("en", "US"));
 
+		String in = "D:/matsim_davis/Scenario_3/";
 		scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
-		readVOTs("C:/Users/anmol331/Desktop/Scenario_3/personData_6.csv");
-		readCarPopulation("D:/matsim/bartAccess/car2bart/output_plans.xml.gz");
+		readVOTs(in+"tmz_input/personData_6.csv");
+		readCarPopulation(in+"matsim_output/car2bart/output_plans.xml.gz");
 		
 		EventsManager carevents = EventsUtils.createEventsManager();
 		TravelTimeAnalyzer carTT = new TravelTimeAnalyzer();
 		carevents.addHandler(carTT);
-		new MatsimEventsReader(carevents).readFile("D:/matsim/bartAccess/car2bart/output_events.xml.gz");
+		new MatsimEventsReader(carevents).readFile(in+"matsim_output/car2bart/output_events.xml.gz");
 		
 		EventsManager door2doorevents = EventsUtils.createEventsManager();
 		TravelTimeAnalyzer door2doorTT = new TravelTimeAnalyzer();
 		door2doorevents.addHandler(door2doorTT);
-		new MatsimEventsReader(door2doorevents).readFile("D:/matsim/bartAccess/all_drt/output_events.xml.gz");
+		new MatsimEventsReader(door2doorevents).readFile(in+"matsim_output/all_drt/output_events.xml.gz");
 		
 		EventsManager stopevents = EventsUtils.createEventsManager();
 		TravelTimeAnalyzer stopTT = new TravelTimeAnalyzer();
 		stopevents.addHandler(stopTT);
-		new MatsimEventsReader(stopevents).readFile("D:/matsim/bartAccess/all_drt/output_events.xml.gz");
+		new MatsimEventsReader(stopevents).readFile(in+"matsim_output/all_drt_withStops/output_events.xml.gz");
 		
-		addTTsToOutput(carTT.getTravelTimes());
-		addTTsToOutput(door2doorTT.getTravelTimes());
-		readWaitTimes("D:/matsim/bartAccess/all_drt/ITERS/it.2/2.drt_trips.csv");
-		addTTsToOutput(stopTT.getTravelTimes());
-		readWaitTimes("D:/matsim/bartAccess/all_drt_withStops/ITERS/it.2/2.drt_trips.csv");
-		writeOutput("C:/Users/anmol331/Desktop/Scenario_3/scenarioAnalysis.csv");
+		EventsManager nopool = EventsUtils.createEventsManager();
+		TravelTimeAnalyzer nopoolTT = new TravelTimeAnalyzer();
+		nopool.addHandler(nopoolTT);
+		new MatsimEventsReader(nopool).readFile(in+"matsim_output/all_drt_1pax/output_events.xml.gz");
+		
+		
+		
+		addTimesToOutput(carTT.getTravelTimes());
+		addTimesToOutput(carTT.getArrivalTimes());
+
+		addTimesToOutput(door2doorTT.getTravelTimes());
+		readWaitTimes(in+"matsim_output/all_drt/ITERS/it.2/2.drt_trips.csv");
+		addTimesToOutput(door2doorTT.getArrivalTimes());
+
+		addTimesToOutput(stopTT.getTravelTimes());
+		readWaitTimes(in+"matsim_output/all_drt_withStops/ITERS/it.2/2.drt_trips.csv");
+		addTimesToOutput(stopTT.getArrivalTimes());
+
+		addTimesToOutput(nopoolTT.getTravelTimes());
+		readWaitTimes(in+"matsim_output/all_drt_1pax/ITERS/it.2/2.drt_trips.csv");
+		addTimesToOutput(nopoolTT.getArrivalTimes());
+
+		
+		writeOutput(in+"matsim_output/scenarioAnalysisWithArrivalTimes.csv");
 	}
 
 	private void writeOutput(String outputFile) {
@@ -75,7 +102,7 @@ public class RunAnalysis {
 		try {
 			bw.write(HEADER);
 			for (List<String> r : resultsString.values()) {
-				if (r.size() == 11) {
+				if (r.size() == 17) {
 					bw.newLine();
 				for (String s : r) {
 					bw.write(s+DEL);
@@ -112,17 +139,19 @@ public class RunAnalysis {
 		});
 		for (Entry<Id<Person>, List<String>> e : resultsString.entrySet()) {
 			if (waitTimes.containsKey(e.getKey())) {
-				e.getValue().add(String.format("%.1f", waitTimes.get(e.getKey())));
+				e.getValue().add(Time.writeTime(waitTimes.get(e.getKey())));
 			} else {
-				e.getValue().add(0.+"");
+				e.getValue().add(Time.writeTime(0));
 				
 			}
 		}
 	}
 
-	private void addTTsToOutput(Map<Id<Person>, Double> travelTimes) {
-		travelTimes.forEach((k,v)->resultsString.get(k).add(String.format("%.1f", v)));
+	private void addTimesToOutput(Map<Id<Person>, Double> travelTimes) {
+		travelTimes.forEach((k,v)->resultsString.get(k).add(Time.writeTime(v)));
 		}
+
+
 
 	private void readVOTs(String personDataFile) {
 		TabularFileParserConfig tfc = new TabularFileParserConfig();

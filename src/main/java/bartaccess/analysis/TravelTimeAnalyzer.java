@@ -15,14 +15,15 @@ public class TravelTimeAnalyzer implements ActivityEndEventHandler, ActivityStar
 	
 	private Map<Id<Person>,Double> departureTimes = new HashMap<>();
 	private Map<Id<Person>,Double> travelTimes = new HashMap<>();
-	
+	private Map<Id<Person>,Double> arrivalTimes = new HashMap<>();
+
 	@Override
 	public void handleEvent(ActivityStartEvent event) {
 	if (event.getActType().equals("bart")) {
 		double departureTime = departureTimes.remove(event.getPersonId());
 		double travelTime = event.getTime() - departureTime;
 		this.travelTimes.put(event.getPersonId(), travelTime);
-		
+		this.arrivalTimes.put(event.getPersonId(),event.getTime());
 	}
 		
 	}
@@ -38,5 +39,8 @@ public class TravelTimeAnalyzer implements ActivityEndEventHandler, ActivityStar
 	public Map<Id<Person>, Double> getTravelTimes() {
 		return travelTimes;
 	}
-	
+
+	public Map<Id<Person>, Double> getArrivalTimes() {
+		return arrivalTimes;
+	}
 }
