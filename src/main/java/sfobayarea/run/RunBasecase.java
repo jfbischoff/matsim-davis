@@ -22,6 +22,7 @@
  */
 package sfobayarea.run;
 
+import ch.sbb.matsim.routing.pt.raptor.SwissRailRaptorModule;
 import org.matsim.api.core.v01.Scenario;
 import org.matsim.api.core.v01.TransportMode;
 import org.matsim.core.config.Config;
@@ -44,7 +45,7 @@ public static void main(String[] args) {
 	if (args.length>0) {
 		configFile = args[0];
 	} else {
-		configFile = "C:/Users/anmol331\\Desktop\\scenario/config_0.05.xml";
+		configFile = "D:/matsim_davis/Scenario_1/matsim_input/config_0.05.xml";
 	}
 	//read in the config file:
 	Config config = ConfigUtils.loadConfig(configFile);
@@ -67,7 +68,9 @@ public static void main(String[] args) {
 			
 			//adding an event handler that takes care of calculating parking charges
 			bind(AddParkingCharges.class).asEagerSingleton();
-	}});
+			install(new SwissRailRaptorModule());
+
+		}});
 		
 	controler.run();
 	

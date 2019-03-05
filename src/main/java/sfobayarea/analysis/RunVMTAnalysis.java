@@ -34,7 +34,7 @@ import org.matsim.core.utils.io.IOUtils;
 public class RunVMTAnalysis {
 public static void main(String[] args) throws IOException {
 	
-	String folder = "D:/Scenario_1/matsim_output/at_case_car23cpm/";
+	String folder = "D:/matsim_davis/Scenario_1/matsim_output/atcase_pt_36cpm/";
 	
 	Network network = NetworkUtils.createNetwork();
 	new MatsimNetworkReader(network).readFile(folder+"output_network.xml.gz");

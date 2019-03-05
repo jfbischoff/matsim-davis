@@ -18,10 +18,6 @@
  * *********************************************************************** */
 
 package bartaccess.run;
-
-import org.matsim.contrib.drt.analysis.zonal.DrtZonalModule;
-import org.matsim.contrib.drt.analysis.zonal.DrtZonalSystem;
-import org.matsim.contrib.drt.optimizer.rebalancing.DemandBasedRebalancingStrategy;
 import org.matsim.contrib.drt.optimizer.rebalancing.RebalancingStrategy;
 import org.matsim.contrib.drt.run.DrtConfigConsistencyChecker;
 import org.matsim.contrib.drt.run.DrtConfigGroup;
@@ -53,18 +49,6 @@ public class RunDRTScenario {
 		config.addConfigConsistencyChecker(new DrtConfigConsistencyChecker());
 		config.checkConsistency();
 		Controler controler = DrtControlerCreator.createControler(config, otfvis);
-		DrtZonalSystem zones = new DrtZonalSystem(controler.getScenario().getNetwork(), 3000);
-		
-		controler.addOverridingModule(new AbstractModule() {
-		// vehicles will be re-located according to a simple demand based algorithm	
-			@Override
-			public void install() {
-				bind(RebalancingStrategy.class).to(DemandBasedRebalancingStrategy.class).asEagerSingleton();
-				bind(DrtZonalSystem.class).toInstance(zones);
-			}
-		});
-
-		controler.addOverridingModule(new DrtZonalModule());
 		controler.run();
 	}
 

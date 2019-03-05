@@ -21,19 +21,28 @@
 			<id>matsim</id>
 			<url>https://dl.bintray.com/matsim/matsim</url>
 		</repository>
- <!-- 		<repository>
+		<repository>
 			<id>ojo-snapshots</id>
 			<url>http://oss.jfrog.org/libs-snapshot</url>
-		</repository>	
-		 -->
-	</repositories>	
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+			<repository>
+				<id>jitpack.io</id>
+				<url>https://jitpack.io</url>
+			</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.matsim</groupId>
 			<artifactId>matsim</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Include some MATSim extensions -->
@@ -41,40 +50,40 @@
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>drt</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>av</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>taxi</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>av</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>otfvis</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.matsim.contrib</groupId>
 			<artifactId>taxi</artifactId>
 <!-- 			<version>0.9.0</version>
- -->			<version>0.10.0</version>
+ -->			<version>0.11.0-SNAPSHOT</version>
 		</dependency>
 		
 		<!-- Include the JUnit testing library -->
@@ -91,6 +100,13 @@
 		    <artifactId>guava</artifactId>
 		    <version>24.0-jre</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.SchweizerischeBundesbahnen</groupId>
+			<artifactId>matsim-sbb-extensions</artifactId>
+			<version>0.10.1</version>
+		</dependency>
+
 
 	</dependencies>
 

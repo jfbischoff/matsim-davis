@@ -28,7 +28,7 @@ import org.matsim.core.network.io.MatsimNetworkReader;
 public class RunTaxiAnalysis {
 
 	public static void main(String[] args) {
-		String folder = "D:\\matsim\\atcase_20it/";
+		String folder = "D:/matsim_davis/Scenario_1/matsim_output/atcase_pt_36cpm/";
 		
 		Network network = NetworkUtils.createNetwork();
 		new MatsimNetworkReader(network).readFile(folder+"/output_network.xml.gz");
