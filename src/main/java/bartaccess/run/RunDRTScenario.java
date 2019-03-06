@@ -48,7 +48,7 @@ public class RunDRTScenario {
 	public static void run(Config config, boolean otfvis) {
 		config.addConfigConsistencyChecker(new DrtConfigConsistencyChecker());
 		config.checkConsistency();
-		Controler controler = DrtControlerCreator.createControler(config, otfvis);
+		Controler controler = DrtControlerCreator.createControlerWithSingleModeDrt(config, otfvis);
 		controler.run();
 	}
 
