@@ -50,10 +50,10 @@ public class CreateTaxiVehicles {
      */
     public static void main(String[] args) {
         Scenario scenario = ScenarioUtils.createScenario(ConfigUtils.createConfig());
-        int numberofVehicles = 5000;
+        int numberofVehicles = 10000;
         double operationStartTime = 0.; //t0
         double operationEndTime = 30 * 3600.;    //t1
-        int seats = 8;
+        int seats = 1;
         String networkfile = "D:/matsim_davis/scenario_2019/matsim_input/detailednet_epsg.xml.gz";
         String taxisFile = "D:/matsim_davis/scenario_2019/matsim_input/taxis_" + numberofVehicles + ".xml";
         List<DvrpVehicleSpecification> vehicles = new ArrayList<>();

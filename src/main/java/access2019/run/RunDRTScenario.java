@@ -18,14 +18,18 @@
  * *********************************************************************** */
 
 package access2019.run;
+import org.matsim.contrib.av.robotaxi.fares.drt.DrtFareConfigGroup;
+import org.matsim.contrib.av.robotaxi.fares.drt.DrtFareModule;
 import org.matsim.contrib.drt.run.DrtConfigConsistencyChecker;
 import org.matsim.contrib.drt.run.DrtConfigGroup;
 import org.matsim.contrib.drt.run.DrtControlerCreator;
 import org.matsim.contrib.dvrp.run.DvrpConfigGroup;
 import org.matsim.core.config.Config;
 import org.matsim.core.config.ConfigUtils;
+import org.matsim.core.controler.AbstractModule;
 import org.matsim.core.controler.Controler;
 import org.matsim.vis.otfvis.OTFVisConfigGroup;
+import sfobayarea.scoring.AgentSpecificVOTScoring;
 
 /**
  * @author jbischoff
@@ -34,8 +38,8 @@ public class RunDRTScenario {
 	
 	public static void main(String[] args) {
 
-		String configFile = "D:/matsim_davis/scenario_2019/matsim_input/configDRT.xml";
-		Config config = ConfigUtils.loadConfig(configFile, new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup());
+		String configFile = args[0];
+		Config config = ConfigUtils.loadConfig(configFile, new DrtConfigGroup(), new DvrpConfigGroup(), new OTFVisConfigGroup(), new DrtFareConfigGroup());
 		DrtConfigGroup.get(config).setPrintDetailedWarnings(false);
 		run(config,false);
 		
@@ -45,6 +49,14 @@ public class RunDRTScenario {
 		config.addConfigConsistencyChecker(new DrtConfigConsistencyChecker());
 		config.checkConsistency();
 		Controler controler = DrtControlerCreator.createControlerWithSingleModeDrt(config, otfvis);
+		controler.addOverridingModule(new DrtFareModule());
+		controler.addOverridingModule(new AbstractModule() {
+			@Override
+			public void install() {
+				bindScoringFunctionFactory().to(AgentSpecificVOTScoring.class);
+				bind(TollEventHandler.class).asEagerSingleton();
+			}
+		});
 		controler.run();
 	}
 
